@@ -5,8 +5,8 @@ import axios from "axios";
 import { atom,useRecoilState } from "recoil";
 import {AddCart} from "./AddCart"
 import {cartAtom, useCart} from "../atoms/cartAtom"
+import {ReviewForm} from "../components/ReviewForm"
 import '../App.css';
-import {visible} from "../App"
 
 
 //this logic should be present in a separate file under Store folder (teja)
@@ -22,7 +22,6 @@ export const Products=()=>{
 
     //this logic can be moved to the Store file under custom hook named "useCart"
     const {id}=useParams()
-    const [cartvalue,setCartValue]=useState(0);
 
 
     //console.log(id)
@@ -30,6 +29,10 @@ export const Products=()=>{
         return  await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${id}`);
       })
       
+    const {data:reviewdata,status}=useQuery(['review',id],async ()=>{
+      return  await axios.get(`https://obscure-refuge-62167.herokuapp.com/products/${id}/reviews`);
+
+})
       
     const [imgsrc,setImgsrc]=useState('')
     useEffect(()=>
@@ -76,6 +79,9 @@ export const Products=()=>{
       
      
       const {id:i,name,price,quantity,variants,image} = data.data;
+      //const {ratings}=reviewdata.data;
+      //console.log(ratings.length);
+      //console.log(ratings);
       //setText(quantity>10?"available":quantity>=1?"sellingfast":"unavailable")
       // console.log(variants.image)
       //disabled={dis}
@@ -93,36 +99,36 @@ export const Products=()=>{
      // }
      
      //array to object
-      const addToCart=()=>{ 
+      const initialaddToCart=()=>{          //cart structure {id:quantity}
         setCart({...cart,[data.data.id]:1})
         setCurrentQty(currentQty-1)
       };
 
-      const remFromCart=()=>{
-        
-        setCart(()=>[
-            {
-              id:i,
-              image:image,
-              name:name,
-              quantity:count+1,
-              price:price * (count+1),
-            }
-          ]);
-        }
-      const remCart=()=>{
-        setCart(()=>[
-        ]);
-      }
+      //const remFromCart=()=>{
+      //  
+      //  setCart(()=>[
+      //      {
+      //        id:i,
+      //        image:image,
+      //        name:name,
+      //        quantity:count+1,
+      //        price:price * (count+1),
+      //      }
+      //    ]);
+      //  }
+      //const remCart=()=>{
+      //  setCart(()=>[
+      //  ]);
+      //}
 
       
       
-      const increment=()=>{
+      const addToCart=()=>{
           setCart({...cart,[data.data.id]:cart[data.data.id]+1});
           setCurrentQty(currentQty-1);
         }
-      const decrement=()=>{
-        if(cart[data.data.id]===1)
+      const remFromCart=()=>{
+        if(cart[data.data.id]===1)    //if there is only 1 item delete entry from cart
           {
             let temp={...cart}
             delete temp[data.data.id]
@@ -144,11 +150,12 @@ export const Products=()=>{
         else
         {return "unavailable"}
       }
+
       const text=getcurrqtytxt()
       console.log(text)
-      const loadCart=()=>{
-        return <AddCart id={i}/>
-      }
+      //const loadCart=()=>{
+      //  return <AddCart id={i}/>
+      //}
       console.log(cart)
       console.log(Object.keys(cart))
      // console.log(count)
@@ -185,13 +192,32 @@ export const Products=()=>{
                 
                 (cart[data.data.id]>0)?
                     (<div className='counter'>    
-                      <button id="btn" disabled={currentQty===data.data.quantity?true:false} onClick={decrement}>-</button>
+                      <button id="btn" disabled={currentQty===data.data.quantity?true:false} onClick={remFromCart}>-</button>
                       {cart[data.data.id]}
-                      <button id="btn" disabled={currentQty===0?true:false} onClick={increment}>+</button>
+                      <button id="btn" disabled={currentQty===0?true:false} onClick={addToCart}>+</button>
                     </div>)
                     :
-                    <button id="btn" onClick={addToCart}>Add to Cart</button>
+                    <button id="btn" onClick={initialaddToCart}>Add to Cart</button>
                 }
+                <h3>Add a Review:</h3>
+                <div>
+                  <ReviewForm id={data.data.id}/>
+                </div>
+                <h3>Customer Reviews:</h3> 
+                <div className="reviews">
+                  {
+                      reviewdata?reviewdata.data.ratings.map((review)=>
+                      (<div key={review.id}>
+                            <p><b>Customer</b>:{review.name}</p>
+                            <p>Rating:{review.rating}⭐</p>
+                            <p>Review:{review.review}</p>
+                        </div>))
+                        :
+                        <h3>Loading..</h3>
+                  }
+                     
+                </div>
+
             </div>   
             
         </div>:"undefined"
