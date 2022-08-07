@@ -5,6 +5,7 @@ import axios from "axios";
 import { atom,useRecoilState } from "recoil";
 import {AddCart} from "./AddCart"
 import {cartAtom, useCart} from "../atoms/cartAtom"
+import {ReviewForm} from "../components/ReviewForm"
 import '../App.css';
 
 
@@ -21,7 +22,6 @@ export const Products=()=>{
 
     //this logic can be moved to the Store file under custom hook named "useCart"
     const {id}=useParams()
-    const [cartvalue,setCartValue]=useState(0);
 
 
     //console.log(id)
@@ -79,6 +79,9 @@ export const Products=()=>{
       
      
       const {id:i,name,price,quantity,variants,image} = data.data;
+      //const {ratings}=reviewdata.data;
+      //console.log(ratings.length);
+      //console.log(ratings);
       //setText(quantity>10?"available":quantity>=1?"sellingfast":"unavailable")
       // console.log(variants.image)
       //disabled={dis}
@@ -196,7 +199,11 @@ export const Products=()=>{
                     :
                     <button id="btn" onClick={initialaddToCart}>Add to Cart</button>
                 }
-                <p>Reviews:</p> 
+                <h3>Add a Review:</h3>
+                <div>
+                  <ReviewForm id={data.data.id}/>
+                </div>
+                <h3>Customer Reviews:</h3> 
                 <div className="reviews">
                   {
                       reviewdata?reviewdata.data.ratings.map((review)=>
