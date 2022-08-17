@@ -1,5 +1,5 @@
 .main{
-  width:1170px;
+  width:100%;
   margin:20px auto;
 }
 
@@ -8,6 +8,7 @@
   list-style-type: none;
   display:flex;
   justify-content: space-between;
+  margin:20px auto;
 }
 .nav1 > .btncart{
   justify-content: right;
@@ -18,6 +19,7 @@
   display:flex;
   list-style-type: none;
   justify-content: space-between;
+  margin:20px auto;
 }
 .ActiveLink{
   color:red;
@@ -30,10 +32,11 @@
   max-width: 1170px;
   display:flex;
   justify-content: left;
-  margin-top: 30px;
+  margin:20px auto; 
 }
 .description{
-  margin-left: 40px;
+  margin-left: 20px;
+  list-style-type: none;
 }
 .namewrap{
   overflow: hidden;
@@ -45,8 +48,12 @@
   max-width: 1170px;
   display:flex;
   justify-content: space-around;
+  margin:20px auto;
 }
 
+.link{
+  text-decoration: none;
+}
 .link:hover{
     transform: scale(1.01);
     box-shadow: 0 0 10px 5px rgb(181, 181, 181);
@@ -111,8 +118,17 @@
   position:relative;
   right:95.5px;
   max-width: 100%;
-  background-color: rgb(120, 120, 120);
+  background-color: rgb(168, 166, 166);
   height:auto;
   display:flex;
   flex-direction: column;
+  border:1px black;
+}
+.err{
+  margin:20px auto;
+}
+.reviewHead{
+  background-color: rgb(248, 184, 105);
+  padding: 7px;
+  background-image: linear-gradient(to left, #f9c659, #f5dd6a);
 }
